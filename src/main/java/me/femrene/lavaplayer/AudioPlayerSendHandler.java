@@ -2,7 +2,7 @@
  * Copyright Developing-Rene(c) 2022. Do not Change this resource without permissions
  */
 
-package de.DevelopingRene.lavaplayer;
+package me.femrene.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame;

@@ -2,7 +2,7 @@
  * Copyright Developing-Rene(c) 2022. Do not Change this resource without permissions
  */
 
-package de.DevelopingRene.lavaplayer;
+package me.femrene.lavaplayer;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -11,12 +11,14 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import de.DevelopingRene.Main;
+import me.femrene.BotConfig;
+import me.femrene.Main;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,11 @@ public class PlayerManager {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
                 musicManager.scheduler.queue(audioTrack);
-                setDesc(audioTrack);
+                try {
+                    setDesc(audioTrack);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 textChannel.sendMessage("Adding to queue **'"+audioTrack.getInfo().title+"'** by **'"+audioTrack.getInfo().author+"'**").queue();
             }
 
@@ -59,7 +65,11 @@ public class PlayerManager {
                 final List<AudioTrack> tracks = audioPlaylist.getTracks();
                 if (!tracks.isEmpty()) {
                     musicManager.scheduler.queue(tracks.get(0));
-                    setDesc(tracks.get(0));
+                    try {
+                        setDesc(tracks.get(0));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     textChannel.sendMessage("Adding to queue **'"+tracks.get(0).getInfo().title+"'** by **'"+tracks.get(0).getInfo().author+"'**").queue();
                 }
             }
@@ -85,14 +95,14 @@ public class PlayerManager {
         return INSTANCE;
     }
 
-    public void setDesc(AudioTrack track) {
+    public void setDesc(AudioTrack track) throws IOException {
         String c;
         if (track != null){
-            c = de.DevelopingRene.BotConfig.getString("activity").replace("%song%",track.getInfo().title);
+            c = BotConfig.getString("activity").replace("%song%",track.getInfo().title);
             c.replace("%author%",track.getInfo().author);
         } else {
-            c = de.DevelopingRene.BotConfig.getString("activity").replace("%song%","nothing");
+            c = BotConfig.getString("activity").replace("%song%","nothing");
         }
-        Main.jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing(c),false);
+        Main.jda.getPresence().setPresence(OnlineStatus.ONLINE,Activity.playing(c),false);
     }
 }
