@@ -12,16 +12,14 @@ public class BotConfig {
         if (!file.exists()) {
             Scanner scanner = new Scanner(System.in);
             FileWriter writer = new FileWriter(file);
-            //while (true) {
-                System.out.println("Enter your token here (eg. MTA5MTczOTM2MzMzNzA2MDM1Mg.GhSvp2.h_q1uXD9-xvRG3V7AvEY3dbZFcPVKmZ6FLUFgc)");
-                String token = scanner.nextLine();
-                System.out.println("Enter your Activity here (eg. your favourite Music)");
-                String act = scanner.nextLine();
-                writer.write("token="+token+"\n");
-                writer.write("activity="+act+"\n");
-                writer.flush();
-                writer.close();
-            //}
+            System.out.println("Enter your token here (eg. MTA5MTczOTM2MzMzNzA2MDM1Mg.GhSvp2.h_q1uXD9-xvRG3V7AvEY3dbZFcPVKmZ6FLUFgc)");
+            String token = scanner.nextLine();
+            System.out.println("Enter your Activity here (eg. your favourite Music)");
+            String act = scanner.nextLine();
+            writer.write("token="+token+"\n");
+            writer.write("activity="+act+"\n");
+            writer.flush();
+            writer.close();
         }
     }
 
