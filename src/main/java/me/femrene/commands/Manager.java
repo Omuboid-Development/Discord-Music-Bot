@@ -27,7 +27,7 @@ public class Manager extends ListenerAdapter {
         event.deferReply().queue();
         switch (event.getName()) {
             case "play":
-                String[] args = Objects.requireNonNull(event.getOption("song")).toString().split(" ");
+                String arg = Objects.requireNonNull(event.getOption("song")).getAsString();
                 if (!event.getMember().getVoiceState().inAudioChannel()) {
                     //event.getChannel().sendMessage("You need to be in a VoiceChannel").queue();
                     event.getHook().sendMessage("You need to be in a Voice channel").setEphemeral(true).queue();
@@ -41,21 +41,13 @@ public class Manager extends ListenerAdapter {
                     audioManager.openAudioConnection(memberChannel);
                 }
 
-                StringBuilder a = new StringBuilder();
-                for (String arg : args) {
-                    a.append(arg);
+                if (!isURL(arg)) {
+                    arg = "ytsearch:"+arg+" audio";
                 }
-                //System.out.println(a.toString());
-                String b = a.toString();
-                String c = String.join(" ", b);
-                String d = c.replace("Option[STRING](song=","");
-                String e = d.replace(")","");
-                if (!isURL(e)) {
-                    e = "ytsearch:"+e+" audio";
-                }
-                PlayerManager.getINSTANCE().loadAndPlay(event.getChannel().asTextChannel(), e);
+                System.out.println(arg);
+                PlayerManager.getINSTANCE().loadAndPlay(event.getChannel().asTextChannel(), arg);
                 AudioTrack at = PlayerManager.getINSTANCE().getMusicManager(event.getGuild()).audioPlayer.getPlayingTrack();
-                event.getHook().sendMessage("Song added tu queue").setEphemeral(true).queue();
+                event.getHook().sendMessage("Song added to queue").setEphemeral(true).queue();
                 break;
             case "stop":
                 if (event.getGuild().getAudioManager().isConnected()) {
@@ -81,8 +73,8 @@ public class Manager extends ListenerAdapter {
                 break;
             case "volume":
                 if (event.getGuild().getAudioManager().isConnected()) {
-                    String y = event.getOption("volume").toString().replace("Option[STRING](volume=","").replace(")","");
-                    PlayerManager.getINSTANCE().getMusicManager(event.getGuild()).audioPlayer.setVolume(Integer.parseInt(y));
+                    int y = event.getOption("volume").getAsInt();
+                    PlayerManager.getINSTANCE().getMusicManager(event.getGuild()).audioPlayer.setVolume(y);
                     event.getHook().sendMessage("Volume set to "+y+"%").setEphemeral(true).queue();
                 }
                 break;
